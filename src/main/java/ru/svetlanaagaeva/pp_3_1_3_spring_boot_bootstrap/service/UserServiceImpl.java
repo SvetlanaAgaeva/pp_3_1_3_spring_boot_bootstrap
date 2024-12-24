@@ -95,15 +95,14 @@ public class UserServiceImpl implements UserService {
         existingUser.setAge(user.getAge());
         if (user.getRoles() == null || user.getRoles().isEmpty()) {
             user.setRoles(existingUser.getRoles());
-        }
-        if (!existingUser.getPassword().isEmpty()) {
-            if (!bCryptPasswordEncoder.matches(existingUser.getPassword(), user.getPassword())) {
-                user.setPassword(bCryptPasswordEncoder.encode(existingUser.getPassword()));
-            }
+        } else {
             existingUser.setRoles(user.getRoles());
-            userRepository.save(existingUser);
-
         }
+        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+            existingUser.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        }
+
+        userRepository.save(existingUser);
     }
 
     @Override
